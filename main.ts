@@ -8,6 +8,8 @@ var LEFT = 100;
 var BOTTOM = 100 + 801;
 var RIGHT = 100 + 801;
 
+var PALETTEX = 50;
+
 canvas.width = 901;
 canvas.height = 901;
 
@@ -24,26 +26,43 @@ class Hexagon
 	realX : number;
 	realY : number;
 
-	constructor (x: number, y: number, t : string, sizeOfCell : number) 
+	constructor (x: number, y: number, realX : number, realY : number, t : string, sizeOfCell : number) 
 	{ 
 		this.x = x;
 		this.y = y;
+
+		this.realX = realX;
+		this.realY = realY;
 
         this.type = t;
 		this.sizeOfCell = sizeOfCell;
 
 		this.image = new Image();
+
+		this.image.src = this.type;
+ 		this.image.onload = (() => this.printImage(-100, -100));
     }
 
 	printImage(x : number, y : number) 
 	{
 		this.picLoaded = true;
 		ctx.drawImage(this.image, x - this.sizeOfCell, y - (Math.sqrt(3) * this.sizeOfCell) / 2);
-		//console.log("DRAWWWWWWWWWWWWWW " + x + " " + y);
+		console.log("DRAWWWWWWWWWWWWWW " + x + " " + y, this.image.src);
 	}
 
 	drawHex()
 	{
+		if(this.picLoaded)
+ 		{
+ 			this.printImage(this.realX, this.realY);	
+ 		}
+ 		else
+		{
+		this.image.src = this.type;
+ 			this.image.onload = (() => this.printImage(this.realX, this.realY));
+ 		}
+		
+		/*
 		var id : number = 0;
 		var currX : number = -1; 
 		var currY : number = -1;
@@ -87,7 +106,8 @@ class Hexagon
 					}
 				}
 			}
-        }		
+        }
+        */		
 	}
 } 
 
@@ -115,6 +135,10 @@ class HexGrid
     flag = new Array(25);
     map = new Array(25);
     centersOfCells = new Array(25);
+    
+    paletteFlag = new Array(25);
+    palette = new Array<Hexagon>(25);
+    paletteCenters = new Array<Point>(25);
 
     oldPosition : Point;
     isMoving : boolean = false;
@@ -137,6 +161,16 @@ class HexGrid
 		var id : number = 0;
 		var currX : number = -1; 
 		var currY : number = -1;
+		var currYY = -1;
+
+		for(var y = 150; y + (Math.sqrt(3) * this.sizeOfCell / 2) < BOTTOM; y += (Math.sqrt(3) * this.sizeOfCell))
+		{
+			currYY++;
+				
+			this.paletteCenters[currYY] = new Point(PALETTEX, y);
+			//console.log(y);
+		}
+
 
 		for(var x = LEFT + this.sizeOfCell; x + this.sizeOfCell < RIGHT; x += 3 * this.sizeOfCell / 2)
 		{
@@ -144,7 +178,7 @@ class HexGrid
             currX++;
             currY = -1;
 
-            console.log(x);
+            //console.log(x);
 
 			var startY : number;
 
@@ -197,6 +231,18 @@ class HexGrid
         		}
         	}
         }
+        
+        for(var i = 0; i < 25; i++)
+        {
+        	if(this.paletteCenters[i])
+            {
+            	this.drawHex(this.paletteCenters[i].x, this.paletteCenters[i].y);
+            	if(this.paletteFlag[i])
+            	{
+            		this.palette[i].drawHex();
+        		}
+            }
+        }
     }
 	
 	drawHex(x : number, y : number)
@@ -218,10 +264,15 @@ class HexGrid
 	
 	addHex(positionX : number, positionY : number, type : string)
 	{
-		this.map[positionX][positionY] = new Hexagon(positionX, positionY, type, this.sizeOfCell);
+		this.map[positionX][positionY] = new Hexagon(positionX, positionY, this.centersOfCells[positionX][positionY].x, this.centersOfCells[positionX][positionY].y ,type, this.sizeOfCell);
 		this.flag[positionX][positionY] = true;
 	}
 
+	addToPalette(positionY : number, type : string)
+	{
+		this.palette[positionY] = new Hexagon(-1, positionY, this.paletteCenters[positionY].x, this.paletteCenters[positionY].y, type, this.sizeOfCell);
+		this.paletteFlag[positionY] = true;
+	}
 	
 	myMove(e)
 	{
@@ -229,7 +280,7 @@ class HexGrid
  		
  		if (mainField.isMoving)
  		{
-  			//console.log("!!!");
+  			console.log("!!!");
  		
   			mainField.drawGrid();
  		
@@ -269,6 +320,25 @@ class HexGrid
         		}
         	}
         }
+        for(var i = 0; i < 25; i++)
+        {
+        	if(mainField.paletteCenters[i])
+            {
+            	var tmp = new Point(e.pageX, e.pageY);
+           		
+           		if(mainField.paletteFlag[i] && mainField.paletteCenters[i].sqrDist(tmp) < (3 * (mainField.sizeOfCell) * (mainField.sizeOfCell) / 4))
+           		{
+           			console.log("!!!", mainField.palette[i].type);
+           			mainField.oldPosition = new Point(-1, -1);
+           			mainField.isMoving = true;
+           			mainField.movingHex = new Hexagon(-100, -100, -100, -100, mainField.palette[i].type, mainField.sizeOfCell)//mainField.map[i][j];
+
+           			canvas.onmousemove = mainField.myMove;	
+           			
+           			mainField.drawGrid();
+           		}
+        	}
+        }
 	}
 
 	myUp(e)
@@ -294,11 +364,11 @@ class HexGrid
 						
 						mainField.map[i][j].x = i;
 						mainField.map[i][j].y = j;
+						
+						mainField.map[i][j].realX = mainField.centersOfCells[i][j].x;
+                        mainField.map[i][j].realY = mainField.centersOfCells[i][j].y;
 
-						mainField.map[i][j].realX = tmp.x;
-						mainField.map[i][j].realY = tmp.y;
-
-            			mainField.flag[i][j] = true;
+                        mainField.flag[i][j] = true;
             			
             			canvas.onmousemove = null;	
             			
@@ -310,18 +380,26 @@ class HexGrid
 
         if(mainField.isMoving && mainField.movingHex != null)
         {
-        	var tmp = new Point(mainField.movingHex.x, mainField.movingHex.y);
+        	if(mainField.movingHex.x == -100 && mainField.movingHex.y == -100)
+        	{	
+        		delete mainField.movingHex;
+        		mainField.isMoving = false;
+            }
+            else
+            {
+            	var tmp = new Point(mainField.movingHex.x, mainField.movingHex.y);
 
-        	mainField.isMoving = false;
-   			mainField.map[tmp.x][tmp.y] = mainField.movingHex;
-   			 
-   			
-   			mainField.flag[tmp.x][tmp.y] = true;
-   			
-   			canvas.onmousemove = null;	
-   			mainField.isMoving = false;
+            	mainField.isMoving = false;
+       			mainField.map[tmp.x][tmp.y] = mainField.movingHex;
+       			 
+       			
+       			mainField.flag[tmp.x][tmp.y] = true;
+       			
+       			canvas.onmousemove = null;	
+       			mainField.isMoving = false;
 
-   			mainField.drawGrid();
+       			mainField.drawGrid();
+        	}
         }
 
         mainField.movingHex = null;
@@ -331,8 +409,10 @@ class HexGrid
 }
 
 var mainField = new HexGrid(25);
-mainField.addHex(15, 15, "a.svg");
-mainField.addHex(5, 5, "b.svg");
+
+mainField.addToPalette(0, "a.svg");
+mainField.addToPalette(1, "b.svg");
+
 mainField.drawGrid();
 
 canvas.onmousedown = mainField.myDown;
