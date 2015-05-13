@@ -362,104 +362,109 @@ class Graph
 	}
 	
 	findPath(vertex1 : Hexagon, vertex2 : Hexagon)
-	{
-		var vertex1array = new Array(6);
-
-		vertex1array[0] = new Point(Math.floor(vertex1.realX - this.sizeOfCell/2), Math.floor(vertex1.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
-		vertex1array[1] = new Point(Math.floor(vertex1.realX + this.sizeOfCell/2), Math.floor(vertex1.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
-		
-		vertex1array[2] = new Point(Math.floor(vertex1.realX + this.sizeOfCell), Math.floor(vertex1.realY));
-		
-		vertex1array[3] = new Point(Math.floor(vertex1.realX + this.sizeOfCell/2), Math.floor(vertex1.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
-		vertex1array[4] = new Point(Math.floor(vertex1.realX - this.sizeOfCell/2), Math.floor(vertex1.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
-		vertex1array[5] = new Point(Math.floor(vertex1.realX - this.sizeOfCell), Math.floor(vertex1.realY));
-
-		var vertex2array = new Array(6);
-
-		vertex2array[0] = new Point(Math.floor(vertex2.realX - this.sizeOfCell/2), Math.floor(vertex2.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
-		vertex2array[1] = new Point(Math.floor(vertex2.realX + this.sizeOfCell/2), Math.floor(vertex2.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
-		
-		vertex2array[2] = new Point(Math.floor(vertex2.realX + this.sizeOfCell), Math.floor(vertex2.realY));
-		
-		vertex2array[3] = new Point(Math.floor(vertex2.realX + this.sizeOfCell/2), Math.floor(vertex2.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
-		vertex2array[4] = new Point(Math.floor(vertex2.realX - this.sizeOfCell/2), Math.floor(vertex2.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
-		
-		vertex2array[5] = new Point(Math.floor(vertex2.realX - this.sizeOfCell), Math.floor(vertex2.realY));
-	
-	    //console.log("Hello");
-
-	    for(var i = 0; i < 6; i++)
+	{   
+		//console.log((vertex1 == undefined) + " " + (vertex2 == undefined));
+		if(vertex1 != undefined && vertex2 != undefined)
 		{
-			vertex1array[i].x = this.newCoordToOld[vertex1array[i].x];				
-			vertex1array[i].y = this.newCoordToOld[vertex1array[i].y];
+		
+     		var vertex1array = new Array(6);
 
-			vertex2array[i].x = this.newCoordToOld[vertex2array[i].x];				
-			vertex2array[i].y = this.newCoordToOld[vertex2array[i].y];		
-		}
+     		vertex1array[0] = new Point(Math.floor(vertex1.realX - this.sizeOfCell/2), Math.floor(vertex1.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		vertex1array[1] = new Point(Math.floor(vertex1.realX + this.sizeOfCell/2), Math.floor(vertex1.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		
+     		vertex1array[2] = new Point(Math.floor(vertex1.realX + this.sizeOfCell), Math.floor(vertex1.realY));
+     		
+     		vertex1array[3] = new Point(Math.floor(vertex1.realX + this.sizeOfCell/2), Math.floor(vertex1.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		vertex1array[4] = new Point(Math.floor(vertex1.realX - this.sizeOfCell/2), Math.floor(vertex1.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		vertex1array[5] = new Point(Math.floor(vertex1.realX - this.sizeOfCell), Math.floor(vertex1.realY));
 
-		var minPath = 100000;
-		var answer = new Array();
+     		var vertex2array = new Array(6);
 
-		for(var i1 = 0; i1 < 6; i1++)
-		{
-			for(var i2 = 0; i2 < 6; i2++)
-			{
-				//console.log(i1 + " " + i2);
-				
-				var tmp = []; 
-				tmp = this.bfs(vertex1array[i1], vertex2array[i2]);				
-				
-				if(tmp != undefined)
-				{
-					if(tmp.length < minPath)
-					{
-						minPath = tmp.length;
-						answer = tmp;
-					}
-				}
-			}
-		}
+     		vertex2array[0] = new Point(Math.floor(vertex2.realX - this.sizeOfCell/2), Math.floor(vertex2.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		vertex2array[1] = new Point(Math.floor(vertex2.realX + this.sizeOfCell/2), Math.floor(vertex2.realY - (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		
+     		vertex2array[2] = new Point(Math.floor(vertex2.realX + this.sizeOfCell), Math.floor(vertex2.realY));
+     		
+     		vertex2array[3] = new Point(Math.floor(vertex2.realX + this.sizeOfCell/2), Math.floor(vertex2.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		vertex2array[4] = new Point(Math.floor(vertex2.realX - this.sizeOfCell/2), Math.floor(vertex2.realY + (Math.sqrt(3) * this.sizeOfCell / 2)));
+     		
+     		vertex2array[5] = new Point(Math.floor(vertex2.realX - this.sizeOfCell), Math.floor(vertex2.realY));
+     	
+     	    //console.log("Hello");
 
-		//console.log(minPath);
-		if(answer[0] != undefined)
-		{
+     	    for(var i = 0; i < 6; i++)
+     		{
+     			vertex1array[i].x = this.newCoordToOld[vertex1array[i].x];				
+     			vertex1array[i].y = this.newCoordToOld[vertex1array[i].y];
 
-			ctx.strokeStyle = 'red';
-        	ctx.lineWidth = 3;
+     			vertex2array[i].x = this.newCoordToOld[vertex2array[i].x];				
+     			vertex2array[i].y = this.newCoordToOld[vertex2array[i].y];		
+     		}
 
-        	ctx.beginPath();
-        	ctx.moveTo(this.arrayOfPoints[answer[0].x], this.arrayOfPoints[answer[0].y]);
-        
-        	for(var i = 0; i < answer.length; i++)
-        	{
-        		ctx.lineTo(this.arrayOfPoints[answer[i].x], this.arrayOfPoints[answer[i].y]);
-        		//console.log(answer[i].x + " " + answer[i].y);
-        		this.badPoints[answer[i].x][answer[i].y] = true;    
-            }
-        	//console.log("------------------------");
-            ctx.stroke()
-    		
-    		//Arrow drawing
-    		var xA = this.arrayOfPoints[answer[1].x] - this.arrayOfPoints[answer[0].x];
-    		var yA = this.arrayOfPoints[answer[1].y] - this.arrayOfPoints[answer[0].y]; 
-    		
-    		var xA1 = (xA * Math.cos(10) - yA * Math.sin(10)) / 2;
-    		var yA1 = (xA * Math.sin(10) + yA * Math.cos(10)) / 2; 
-    		
-    		var xA2 = (xA * Math.cos(-10) - yA * Math.sin(-10)) / 2;
-    		var yA2 = (xA * Math.sin(-10) + yA * Math.cos(-10)) / 2;    		
+     		var minPath = 100000;
+     		var answer = new Array();
 
-    		ctx.beginPath();
-   			ctx.moveTo(this.arrayOfPoints[answer[0].x] - xA1, this.arrayOfPoints[answer[0].y] - yA1);
-   			ctx.lineTo(this.arrayOfPoints[answer[0].x], this.arrayOfPoints[answer[0].y]);
-   			ctx.lineTo(this.arrayOfPoints[answer[0].x] - xA2, this.arrayOfPoints[answer[0].y] - yA2);
-   			
-   			console.log(answer[1].x + xA1 + " : " + answer[1].y + yA1);
+     		for(var i1 = 0; i1 < 6; i1++)
+     		{
+     			for(var i2 = 0; i2 < 6; i2++)
+     			{
+     				//console.log(i1 + " " + i2);
+     				
+     				var tmp = []; 
+     				tmp = this.bfs(vertex1array[i1], vertex2array[i2]);				
+     				
+     				if(tmp != undefined)
+     				{
+     					if(tmp.length < minPath)
+     					{
+     						minPath = tmp.length;
+     						answer = tmp;
+     					}
+     				}
+     			}
+     		}
 
-   			ctx.stroke();
-       	
-       		ctx.lineWidth = 1;
-       	}
+     		//console.log(minPath);
+     		if(answer[0] != undefined)
+     		{
+
+     			ctx.strokeStyle = 'red';
+             	ctx.lineWidth = 3;
+
+             	ctx.beginPath();
+             	ctx.moveTo(this.arrayOfPoints[answer[0].x], this.arrayOfPoints[answer[0].y]);
+             
+             	for(var i = 0; i < answer.length; i++)
+             	{
+             		ctx.lineTo(this.arrayOfPoints[answer[i].x], this.arrayOfPoints[answer[i].y]);
+             		//console.log(answer[i].x + " " + answer[i].y);
+             		this.badPoints[answer[i].x][answer[i].y] = true;    
+                 }
+             	//console.log("------------------------");
+                 ctx.stroke()
+         		
+         		//Arrow drawing
+         		var xA = this.arrayOfPoints[answer[1].x] - this.arrayOfPoints[answer[0].x];
+         		var yA = this.arrayOfPoints[answer[1].y] - this.arrayOfPoints[answer[0].y]; 
+         		
+         		var xA1 = (xA * Math.cos(10) - yA * Math.sin(10)) / 2;
+         		var yA1 = (xA * Math.sin(10) + yA * Math.cos(10)) / 2; 
+         		
+         		var xA2 = (xA * Math.cos(-10) - yA * Math.sin(-10)) / 2;
+         		var yA2 = (xA * Math.sin(-10) + yA * Math.cos(-10)) / 2;    		
+
+         		ctx.beginPath();
+        			ctx.moveTo(this.arrayOfPoints[answer[0].x] - xA1, this.arrayOfPoints[answer[0].y] - yA1);
+        			ctx.lineTo(this.arrayOfPoints[answer[0].x], this.arrayOfPoints[answer[0].y]);
+        			ctx.lineTo(this.arrayOfPoints[answer[0].x] - xA2, this.arrayOfPoints[answer[0].y] - yA2);
+        			
+        			//console.log(answer[1].x + xA1 + " : " + answer[1].y + yA1);
+
+        			ctx.stroke();
+            	
+            		ctx.lineWidth = 1;
+            	}
+    	}
     }
 
     setBadPoint(x : number, y : number, b : boolean)
@@ -815,6 +820,23 @@ class HexGrid
 
  		if(mainField.isMoving)
  		{
+            if(e.pageX < LEFT && e.pageY < TOP)
+            {
+            	for(var i = 0; i < mainField.listOfPathS.length; i++)
+            	{
+            		if(mainField.listOfPathS[i] == mainField.movingHex || mainField.listOfPathE[i] == mainField.movingHex)
+            		{
+            			mainField.listOfPathS.splice(i, 1);
+            			mainField.listOfPathE.splice(i, 1);
+            			i--;
+            		}	
+            	}
+            	
+            	delete mainField.movingHex;
+            	
+            	mainField.drawGrid();
+            }
+            
             for(var i = 0; i < 25; i++)
             {
             	for(var j = 0; j < 25; j++)
