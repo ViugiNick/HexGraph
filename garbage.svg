@@ -1,0 +1,19 @@
+<svg width="90" height="90" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_5">
+   <path fill="#171d25" stroke="#ffbc06" stroke-width="5" d="m3.742504,44.789978l17.528719,-37.278548l46.742739,0l17.528542,37.278548l-17.528542,37.278587l-46.742739,0l-17.528719,-37.278587z" id="svg_1"/>
+   <ellipse fill="#171d25" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" cx="44.011411" cy="25.194306" id="svg_10" rx="9.565322" ry="5.023399"/>
+   <rect fill="#FF0000" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" x="24.902756" y="27.794915" width="39.470697" height="2.000469" id="svg_9"/>
+   <g id="svg_4">
+    <rect fill="#171d25" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" x="28.684906" y="31.884762" width="32.544085" height="37.342081" id="svg_2"/>
+    <g id="svg_3">
+     <line fill="none" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" x1="53.796625" y1="37.53053" x2="53.796625" y2="63.825579" id="svg_7"/>
+     <line fill="none" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" x1="45.088884" y1="37.574984" x2="45.088884" y2="63.914488" id="svg_11"/>
+     <line fill="none" stroke="#ffbc06" stroke-width="5" stroke-linejoin="null" stroke-linecap="null" x1="36.359153" y1="37.474961" x2="36.359153" y2="63.814465" id="svg_12"/>
+    </g>
+   </g>
+  </g>
+ </g>
+</svg>
