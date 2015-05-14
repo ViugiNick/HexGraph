@@ -61,7 +61,9 @@ class Hexagon
  			this.image.onload = (() => this.printImage(this.realX, this.realY));
  		}
 
- 		ctx.beginPath();
+ 		ctx.fillStyle = "grey";
+		
+		ctx.beginPath();
 		ctx.arc(this.realX + this.sizeOfCell, this.realY, 5, 0, Math.PI*2, true); 
 		ctx.closePath();
 		ctx.fill();
@@ -77,7 +79,8 @@ class Graph
 		map = new Array(110);
 		
 		badPoints = new Array(110);
-
+        isCenter = new Array(110);
+	
 	newCoord(x : number)
 	{
 		return this.newCoordToOld[Math.floor(x)];
@@ -96,8 +99,12 @@ class Graph
     		}
 
     		this.badPoints[i1] = new Array<boolean>(110);
+			this.isCenter[i1] = new Array<boolean>(110);
 			for(var j = 0; j < 110; j++)
+			{
 				this.badPoints[i1][j] = false;
+    			this.isCenter[i1][j] = false;
+    		}
     	}
     	
     	var id : number = 0;
@@ -234,6 +241,8 @@ class Graph
 				//this.map[this.newCoord(x)][this.newCoord(y)][this.newCoord(x - this.sizeOfCell)][this.newCoord(y)] = true;
 				this.addEdge(x + this.sizeOfCell, y, x, y);
 				this.addEdge(x, y, x + this.sizeOfCell, y);
+
+				this.isCenter[this.newCoord(x)][this.newCoord(y)] = true;
             }
         }
     }
@@ -315,13 +324,15 @@ class Graph
 			for(var i = 0; i < this.map[v.x][v.y].length; i++)
 			{
 				var newPoint = this.map[v.x][v.y][i];
-				//console.log("Go to on" + newPoint.x + " " + newPoint.y + !this.badPoints[newPoint.x][newPoint.y]);
-        
+				
 				if(!used[newPoint.x][newPoint.y] && (!this.badPoints[newPoint.x][newPoint.y] || (newPoint.x == v2.x && newPoint.y == v2.y)))
 				{
-					used[newPoint.x][newPoint.y] = true;
-					parent[newPoint.x][newPoint.y] = v;
-					queue.push(newPoint);
+					if(!(newPoint.x == v2.x && newPoint.y == v2.y && this.isCenter[v.x][v.y]))
+					{
+						used[newPoint.x][newPoint.y] = true;
+						parent[newPoint.x][newPoint.y] = v;
+						queue.push(newPoint);
+					}
 				}
 			}
 		}
@@ -591,13 +602,13 @@ class HexGrid
    	drawGrid()
 	{
 		//console.log("New Phase");
-		ctx.fillStyle = "#171d25";
-		ctx.strokeStyle = "#ffbc06";
+		ctx.fillStyle = "white";
+		ctx.strokeStyle = "black";
 
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-		ctx.fillStyle = "#ffbc06";
-		ctx.strokeStyle = "#ffbc06";
+		ctx.fillStyle = "grey";
+		ctx.strokeStyle = "black";
 
 		ctx.fillRect(0, 115, 900, 5);
 		ctx.fillRect(95, 0, 5, 900);

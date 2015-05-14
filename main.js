@@ -35,6 +35,7 @@ var Hexagon = (function () {
             this.image.src = this.type;
             this.image.onload = (function () { return _this.printImage(_this.realX, _this.realY); });
         }
+        ctx.fillStyle = "grey";
         ctx.beginPath();
         ctx.arc(this.realX + this.sizeOfCell, this.realY, 5, 0, Math.PI * 2, true);
         ctx.closePath();
@@ -48,6 +49,7 @@ var Graph = (function () {
         this.newCoordToOld = new Array(110);
         this.map = new Array(110);
         this.badPoints = new Array(110);
+        this.isCenter = new Array(110);
         this.sizeOfCell = size;
         for (var i1 = 0; i1 < 110; i1++) {
             this.map[i1] = new Array(110);
@@ -55,8 +57,11 @@ var Graph = (function () {
                 this.map[i1][i2] = [];
             }
             this.badPoints[i1] = new Array(110);
-            for (var j = 0; j < 110; j++)
+            this.isCenter[i1] = new Array(110);
+            for (var j = 0; j < 110; j++) {
                 this.badPoints[i1][j] = false;
+                this.isCenter[i1][j] = false;
+            }
         }
         var id = 0;
         var currX = -1;
@@ -165,6 +170,7 @@ var Graph = (function () {
                 //this.map[this.newCoord(x)][this.newCoord(y)][this.newCoord(x - this.sizeOfCell)][this.newCoord(y)] = true;
                 this.addEdge(x + this.sizeOfCell, y, x, y);
                 this.addEdge(x, y, x + this.sizeOfCell, y);
+                this.isCenter[this.newCoord(x)][this.newCoord(y)] = true;
             }
         }
     }
@@ -217,11 +223,12 @@ var Graph = (function () {
             var v = queue.shift();
             for (var i = 0; i < this.map[v.x][v.y].length; i++) {
                 var newPoint = this.map[v.x][v.y][i];
-                //console.log("Go to on" + newPoint.x + " " + newPoint.y + !this.badPoints[newPoint.x][newPoint.y]);
                 if (!used[newPoint.x][newPoint.y] && (!this.badPoints[newPoint.x][newPoint.y] || (newPoint.x == v2.x && newPoint.y == v2.y))) {
-                    used[newPoint.x][newPoint.y] = true;
-                    parent[newPoint.x][newPoint.y] = v;
-                    queue.push(newPoint);
+                    if (!(newPoint.x == v2.x && newPoint.y == v2.y && this.isCenter[v.x][v.y])) {
+                        used[newPoint.x][newPoint.y] = true;
+                        parent[newPoint.x][newPoint.y] = v;
+                        queue.push(newPoint);
+                    }
                 }
             }
         }
@@ -387,11 +394,11 @@ var HexGrid = (function () {
     };
     HexGrid.prototype.drawGrid = function () {
         //console.log("New Phase");
-        ctx.fillStyle = "#171d25";
-        ctx.strokeStyle = "#ffbc06";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#ffbc06";
-        ctx.strokeStyle = "#ffbc06";
+        ctx.fillStyle = "grey";
+        ctx.strokeStyle = "black";
         ctx.fillRect(0, 115, 900, 5);
         ctx.fillRect(95, 0, 5, 900);
         for (var i = 0; i < 25; i++) {
